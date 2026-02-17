@@ -5,18 +5,32 @@
   <title>Чат</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="chat-body">
+
+  <!-- ЛЕВАЯ ПАНЕЛЬ -->
   <div id="sidebar">
     <h2>Чаты</h2>
+
+    <!-- Поиск чатов -->
+    <input id="searchChat" placeholder="Поиск чатов..." oninput="filterChats()">
+
+    <!-- Список чатов -->
     <div id="chatList"></div>
   </div>
 
+  <!-- ПРАВАЯ ПАНЕЛЬ -->
   <div id="main">
+
+    <!-- Сообщения -->
     <div id="messageList"></div>
+
+    <!-- Отправка -->
     <div id="sendBox">
       <input id="msgInput" placeholder="Введите сообщение...">
       <button onclick="sendMessage()">Отправить</button>
     </div>
+
   </div>
 
   <script type="module" src="chat.js"></script>
