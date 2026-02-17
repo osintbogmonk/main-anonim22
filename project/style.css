@@ -1,34 +1,33 @@
 body {
   margin: 0;
-  font-family: "Segoe UI", sans-serif;
+  font-family: Arial, sans-serif;
 }
 
-/* auth */
+/* AUTH */
 .auth-body {
   background: #1e1f22;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 .auth-card {
   background: #2b2d31;
-  padding: 24px;
+  padding: 20px;
   border-radius: 10px;
-  color: #fff;
+  color: white;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-width: 260px;
 }
 
 .auth-card input {
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #3a3c40;
+  border: none;
   background: #1e1f22;
-  color: #fff;
+  color: white;
 }
 
 .auth-card button {
@@ -36,36 +35,28 @@ body {
   border-radius: 6px;
   border: none;
   background: #5865f2;
-  color: #fff;
+  color: white;
   cursor: pointer;
 }
 
-.auth-card .secondary {
+.secondary {
   background: #3a3c40;
 }
 
-/* chat layout */
+/* CHAT */
 .chat-body {
-  margin: 0;
-  height: 100vh;
   display: flex;
+  height: 100vh;
   background: #1e1f22;
-  color: #e3e3e3;
+  color: white;
 }
 
 #sidebar {
-  width: 280px;
+  width: 260px;
   background: #2b2d31;
   border-right: 1px solid #3a3c40;
   display: flex;
   flex-direction: column;
-}
-
-#sidebar h2 {
-  margin: 0;
-  padding: 16px;
-  border-bottom: 1px solid #3a3c40;
-  background: #232428;
 }
 
 #chatList {
@@ -76,11 +67,10 @@ body {
 
 .chat-item {
   padding: 10px;
-  margin-bottom: 8px;
   background: #3a3c40;
   border-radius: 8px;
+  margin-bottom: 8px;
   cursor: pointer;
-  border: 1px solid #4a4c50;
 }
 
 .chat-item:hover {
@@ -100,36 +90,28 @@ body {
 }
 
 .msg {
-  padding: 10px 14px;
   background: #2b2d31;
-  border-radius: 10px;
+  padding: 10px;
+  border-radius: 8px;
   margin-bottom: 10px;
   max-width: 60%;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 
 #sendBox {
   display: flex;
-  padding: 12px;
+  padding: 10px;
   background: #232428;
-  border-top: 1px solid #3a3c40;
 }
 
 #msgInput {
   flex: 1;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #3a3c40;
+  border: none;
   background: #2b2d31;
-  color: #fff;
+  color: white;
 }
 
-#sendBtn {
+button {
   margin-left: 10px;
-  padding: 10px 18px;
-  border-radius: 8px;
-  border: none;
-  background: #5865f2;
-  color: #fff;
-  cursor: pointer;
 }
