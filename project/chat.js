@@ -3,7 +3,9 @@ import { supabase } from "./supabase.js";
 let currentChatId = null;
 let user = null;
 let subscription = null;
+let allChats = [];
 
+// Получаем пользователя
 async function getUser() {
   const stored = localStorage.getItem("user");
   if (!stored) {
@@ -13,12 +15,24 @@ async function getUser() {
   user = JSON.parse(stored);
 }
 
+// Загружаем чаты
 async function loadChats() {
-  const { data: chats } = await supabase
+  const { data: chats, error } = await supabase
     .from("chats")
     .select("*")
     .order("created_at", { ascending: false });
 
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  allChats = chats;
+  renderChats(chats);
+}
+
+// Рендер списка чатов
+function renderChats(chats) {
   const chatList = document.getElementById("chatList");
   chatList.innerHTML = "";
 
@@ -31,16 +45,33 @@ async function loadChats() {
   });
 }
 
+// Поиск чатов
+window.filterChats = function () {
+  const q = document.getElementById("searchChat").value.toLowerCase();
+  const filtered = allChats.filter(c => c.name.toLowerCase().includes(q));
+  renderChats(filtered);
+};
+
+// Открыть чат
 async function openChat(chatId) {
   currentChatId = chatId;
 
-  if (subscription) supabase.removeChannel(subscription);
+  // Удаляем старую подписку
+  if (subscription) {
+    supabase.removeChannel(subscription);
+  }
 
-  const { data: messages } = await supabase
+  // Загружаем сообщения
+  const { data: messages, error } = await supabase
     .from("messages")
     .select("*")
     .eq("chat_id", chatId)
     .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    return;
+  }
 
   const messageList = document.getElementById("messageList");
   messageList.innerHTML = "";
@@ -54,6 +85,7 @@ async function openChat(chatId) {
 
   messageList.scrollTop = messageList.scrollHeight;
 
+  // Real-time подписка
   subscription = supabase
     .channel("messages")
     .on(
@@ -76,13 +108,15 @@ async function openChat(chatId) {
     .subscribe();
 }
 
-async function sendMessage() {
+// Отправить сообщение
+window.sendMessage = async function () {
   if (!currentChatId) return alert("Выберите чат!");
 
-  const text = document.getElementById("msgInput").value.trim();
+  const input = document.getElementById("msgInput");
+  const text = input.value.trim();
   if (!text) return;
 
-  await supabase.from("messages").insert([
+  const { error } = await supabase.from("messages").insert([
     {
       chat_id: currentChatId,
       user_id: user.id,
@@ -90,11 +124,16 @@ async function sendMessage() {
     }
   ]);
 
-  document.getElementById("msgInput").value = "";
-}
+  if (error) {
+    console.error(error);
+    alert("Ошибка отправки");
+    return;
+  }
 
-window.sendMessage = sendMessage;
+  input.value = "";
+};
 
+// Инициализация
 (async () => {
   await getUser();
   await loadChats();
