@@ -14,15 +14,10 @@ async function getUser() {
 }
 
 async function loadChats() {
-  const { data: chats, error } = await supabase
+  const { data: chats } = await supabase
     .from("chats")
     .select("*")
     .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error(error);
-    return;
-  }
 
   const chatList = document.getElementById("chatList");
   chatList.innerHTML = "";
@@ -39,20 +34,13 @@ async function loadChats() {
 async function openChat(chatId) {
   currentChatId = chatId;
 
-  if (subscription) {
-    supabase.removeChannel(subscription);
-  }
+  if (subscription) supabase.removeChannel(subscription);
 
-  const { data: messages, error } = await supabase
+  const { data: messages } = await supabase
     .from("messages")
     .select("*")
     .eq("chat_id", chatId)
     .order("created_at", { ascending: true });
-
-  if (error) {
-    console.error(error);
-    return;
-  }
 
   const messageList = document.getElementById("messageList");
   messageList.innerHTML = "";
@@ -90,25 +78,19 @@ async function openChat(chatId) {
 
 async function sendMessage() {
   if (!currentChatId) return alert("Выберите чат!");
-  const input = document.getElementById("msgInput");
-  const text = input.value.trim();
+
+  const text = document.getElementById("msgInput").value.trim();
   if (!text) return;
 
-  const { error } = await supabase.from("messages").insert([
+  await supabase.from("messages").insert([
     {
       chat_id: currentChatId,
-      user_id: user?.id || "anon",
+      user_id: user.id,
       text
     }
   ]);
 
-  if (error) {
-    console.error(error);
-    alert("Ошибка отправки");
-    return;
-  }
-
-  input.value = "";
+  document.getElementById("msgInput").value = "";
 }
 
 window.sendMessage = sendMessage;
